@@ -16,7 +16,7 @@ def display_start_menu(message):
     free_trial_button = types.KeyboardButton("Бесплатный тест")
     markup.add(buy_button, profile_button)
     markup.add(free_trial_button)
-    bot.send_message(message.chat.id, "Привет! Я бот для продажи подписки на VPN. ", reply_markup=markup)
+    bot.send_message(message.chat.id, "👾 Приветствую! Я Ваш личный бот и помощник MaskVPN!\n \n Я помогаю c обходом блокировок и защитой вашей конфиденциальности.Привет! Я бот для продажи подписки на VPN. ", reply_markup=markup)
 
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
