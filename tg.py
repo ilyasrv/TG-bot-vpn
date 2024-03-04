@@ -11,12 +11,12 @@ bot = telebot.TeleBot(TOKEN)
 # Функция для отображения начального меню
 def display_start_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buy_button = types.KeyboardButton("Купить")
-    profile_button = types.KeyboardButton("Профиль")
+    buy_button = types.KeyboardButton("Купить VPN")
+    profile_button = types.KeyboardButton("Мой Профиль")
     free_trial_button = types.KeyboardButton("Бесплатный тест")
     markup.add(buy_button, profile_button)
     markup.add(free_trial_button)
-    bot.send_message(message.chat.id, "👾 Приветствую! Я Ваш личный бот и помощник MaskVPN!\n \n Я помогаю c обходом блокировок и защитой вашей конфиденциальности.Привет! Я бот для продажи подписки на VPN. ", reply_markup=markup)
+    bot.send_message(message.chat.id, "👾 Приветствую! Я Ваш личный бот и помощник MaskVPN!\n \nЯ помогаю c обходом блокировок и защитой вашей конфиденциальности.", reply_markup=markup)
 
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
@@ -36,6 +36,17 @@ def profile(message):
 # Обработчик команды "Купить"
 @bot.message_handler(func=lambda message: message.text == "Купить")
 def buy(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    month_button = types.KeyboardButton("1 месяц (100 руб.)")
+    three_months_button = types.KeyboardButton("3 месяца (250 руб.)")
+    six_months_button = types.KeyboardButton("6 месяцев (450 руб.)")
+    twelve_months_button = types.KeyboardButton("12 месяцев (800 руб.)")
+    back_button = types.KeyboardButton("Назад")
+    markup.add(month_button, three_months_button)
+    markup.add(six_months_button, twelve_months_button)
+    markup.add(back_button)
+    bot.send_message(message.chat.id, "Выберите тариф:", reply_markup=markup)
+
     # Здесь можно добавить логику для покупки подписки
     bot.reply_to(message, "Вы выбрали Купить. Покупайте подписку на VPN здесь.")
 
