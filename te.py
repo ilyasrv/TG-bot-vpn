@@ -35,13 +35,13 @@ def display_profile(message):
         users[chat_id] = {"id": chat_id}
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     profile_button = types.KeyboardButton("Профиль")
-    markup.add(profile_button)
+    my_keys_button = types.KeyboardButton("Мои ключи")
+    markup.add(profile_button, my_keys_button)  # Add the "My Keys" button to the markup
     bot.send_message(message.chat.id, f"Ваш профиль (ID: {users[chat_id]['id']}):", reply_markup=markup)
     bot.send_message(message.chat.id, "Дополнительные опции в профиле:", 
                      reply_markup=types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Информация", callback_data="info")))
     # Отправляем кнопки Купить и Бесплатный тест
     display_start_menu(message)
-
 # Обработчик команды "Профиль"
 @bot.message_handler(func=lambda message: message.text == "Профиль")
 def profile(message):
