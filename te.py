@@ -40,12 +40,10 @@ def display_profile(message):
     
     # Создаем inline клавиатуру для дополнительных опций
     additional_markup = types.InlineKeyboardMarkup()
-    additional_markup.row(types.InlineKeyboardButton("Информация", callback_data="info"),
-                          types.InlineKeyboardButton("Мои ключи", callback_data="my_keys"))  # Add the "My Keys" button
+    additional_markup.row(types.InlineKeyboardButton("Информация", callback_data="info"))
+    additional_markup.row(types.InlineKeyboardButton("Мои ключи", callback_data="my_keys"))  # Add the "My Keys" button
                           
     bot.send_message(message.chat.id, "Дополнительные опции в профиле:", reply_markup=additional_markup)
-
-
     # Отправляем кнопки Купить и Бесплатный тест
     display_start_menu(message) 
 # Обработчик команды "Профиль"
