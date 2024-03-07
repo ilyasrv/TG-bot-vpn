@@ -18,7 +18,7 @@ def start(message):
         users[chat_id] = {"id": chat_id}
     display_start_menu(message)
 
-# Функция для отображения начального меню
+# Функция для отображения начального менюff
 def display_start_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buy_button = types.KeyboardButton("Купить")
