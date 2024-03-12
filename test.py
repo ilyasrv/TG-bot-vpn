@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-
+import uuid
 # Укажите токен вашего бота
 TOKEN = '6574304289:AAHbp-YuG9efM7lV--d9nOFawwGERdRZhmg'
 
@@ -84,10 +84,46 @@ def callback_query(call):
             price = int(data[2])
        
             # Создаем кнопки для способов оплаты
-            payment_markup = types.InlineKeyboardMarkup(row_width=4)
-            payment_markup.add(types.InlineKeyboardButton("Банковская карта", callback_data=f"payment_card_{months}_{price}"),
-                               types.InlineKeyboardButton("BTC", callback_data=f"payment_btc_{months}_{price}"),
-                               types.InlineKeyboardButton("Назад", callback_data=f"back"))
+            payment_markup = types.InlineKeyboardMarkup(row_width=2)
+            payment_markup.add(types.InlineKeyboardButton("Банковская карта", callback_data=f"payment_card")),
+            payment_markup.add(types.InlineKeyboardButton("BTC", callback_data=f"payment_btc"))
+            bot.send_message(chat_id, f"Вы выбрали тариф на <b>{months}</b> месяц{'а' if months == 1 else 'ев'}.\nСтоимость - <b>{price} рублей</b>.\n\nВыберите способ оплаты:", reply_markup=payment_markup, parse_mode='HTML')
+
+   # Обработчик нажатия на кнопки способов оплаты и тарифов
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    chat_id = call.message.chat.id
+    user_id = call.from_user.id
+
+    # Обработка нажатия на кнопку выбора тарифа
+    if call.data.startswith('buy_'):
+        data = call.data.split('_')
+        if len(data) == 3:
+            months = int(data[1])
+            price = int(data[2])
+       
+            # Создаем кнопки для способов оплаты
+            payment_markup = types.InlineKeyboardMarkup(row_width=2)
+            payment_markup.add(types.InlineKeyboardButton("Банковская карта", callback_data=f"payment_card_{months}_{price}")),
+            payment_markup.add(types.InlineKeyboardButton("BTC", callback_data=f"payment_btc_{months}_{price}"))
+            bot.send_message(chat_id, f"Вы выбрали тариф на <b>{months}</b> месяц{'а' if months == 1 else 'ев'}.\nСтоимость - <b>{price} рублей</b>.\n\nВыберите способ оплаты:", reply_markup=payment_markup, parse_mode='HTML')
+# Обработчик нажатия на кнопки способов оплаты и тарифов
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    chat_id = call.message.chat.id
+    user_id = call.from_user.id
+
+    # Обработка нажатия на кнопку выбора тарифа
+    if call.data.startswith('buy_'):
+        data = call.data.split('_')
+        if len(data) == 3:
+            months = int(data[1])
+            price = int(data[2])
+       
+            # Создаем кнопки для способов оплаты
+            payment_markup = types.InlineKeyboardMarkup(row_width=2)
+            payment_markup.add(types.InlineKeyboardButton("Банковская карта", callback_data=f"payment_card_{months}_{price}")),
+            payment_markup.add(types.InlineKeyboardButton("BTC", callback_data=f"payment_btc_{months}_{price}"))
             bot.send_message(chat_id, f"Вы выбрали тариф на <b>{months}</b> месяц{'а' if months == 1 else 'ев'}.\nСтоимость - <b>{price} рублей</b>.\n\nВыберите способ оплаты:", reply_markup=payment_markup, parse_mode='HTML')
 
     # Обработка нажатия на кнопки способов оплаты
@@ -100,14 +136,13 @@ def callback_query(call):
             if payment_method == "card":
                 # Ваша логика для оплаты банковской картой
                 bot.send_message(chat_id, f"Покупка на {months} месяцев успешно совершена! Оплачено банковской картой.")
+                # Отправка ссылки с ключом пользователю
+                bot.send_message(chat_id, f"Ваш ключ: https://example.com/keys/")
             elif payment_method == "btc":
                 # Ваша логика для оплаты через BTC
                 bot.send_message(chat_id, f"Покупка на {months} месяцев успешно совершена! Оплачено через BTC.")
 
-            # Обработка нажатия кнопки "Назад"
-            elif call.data == "back":
-                buy(call.message)
-                
+
 # Обработчик команды "Бесплатный тест"
 @bot.message_handler(func=lambda message: message.text == "Бесплатный тест")
 def free_trial(message):
