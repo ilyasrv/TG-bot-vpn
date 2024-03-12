@@ -1,9 +1,10 @@
 import telebot
 from telebot import types
 
+
 # Укажите токен вашего бота
 TOKEN = '6574304289:AAHbp-YuG9efM7lV--d9nOFawwGERdRZhmg'
-
+users = {}
 
 # Создаем экземпляр бота
 bot = telebot.TeleBot(TOKEN)
@@ -12,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 def display_start_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buy_button = types.KeyboardButton("Купить VPN")
-    profile_button = types.KeyboardButton("Мой Профиль")
+    profile_button = types.KeyboardButton("Профиль")
     free_trial_button = types.KeyboardButton("Бесплатный тест")
     markup.add(buy_button, profile_button)
     markup.add(free_trial_button)
@@ -23,15 +24,25 @@ def display_start_menu(message):
 def start(message):
     display_start_menu(message)
 
-# Обработчик команды "Профиль"
-@bot.message_handler(func=lambda message: message.text == "Профиль")
-def profile(message):
+# Функция для отображения профиля
+def display_profile(message):
+    chat_id = message.chat.id
+    if chat_id not in users:
+        users[chat_id] = {"id": chat_id}
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     profile_button = types.KeyboardButton("Профиль")
     markup.add(profile_button)
-    bot.send_message(message.chat.id, "Ваш профиль:", reply_markup=markup)
-    bot.send_message(message.chat.id, "Дополнительные опции в профиле:\nНажмите кнопку 'Информация', чтобы получить дополнительную информацию", 
-                     reply_markup=types.ReplyKeyboardMarkup(resize_keyboard=True).add(types.KeyboardButton("Информация")))
+    bot.send_message(message.chat.id, f"Ваш профиль (ID: {users[chat_id]['id']}):", reply_markup=markup)
+    bot.send_message(message.chat.id, "Дополнительные опции в профиле:", 
+                     reply_markup=types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("Информация", callback_data="info")))
+    # Отправляем кнопки Купить и Бесплатный тест
+    display_start_menu(message)
+
+# Обработчик команды "Профиль"
+@bot.message_handler(func=lambda message: message.text == "Профиль")
+def profile(message):
+    display_profile(message)
+
 
 # Обработчик команды "Купить"
 @bot.message_handler(func=lambda message: message.text == "Купить")
